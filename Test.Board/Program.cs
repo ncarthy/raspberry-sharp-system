@@ -18,6 +18,7 @@ namespace Test.Board
                 Console.WriteLine();
                 Console.WriteLine("Serial number: {0}", board.SerialNumber);
             }
+			Console.ReadLine ();
         }
     }
 }
