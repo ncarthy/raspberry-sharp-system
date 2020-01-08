@@ -90,7 +90,19 @@ namespace Raspberry
             get
             {
                 Processor processor;
-                return Enum.TryParse(ProcessorName, true, out processor) ? processor : Processor.Unknown;
+
+                if (Enum.TryParse(ProcessorName, true, out processor))
+                {
+                    // Check to see if we're dealing with a Pi 4 Model B
+                    // The Pi 4 Model B currently lies to us and tells us that it's a BCM2835
+                    if (processor == Processor.Bcm2835 && Model == Model.Pi4)
+                        processor = Processor.Bcm2711;
+
+                    return processor;
+                }
+
+                return Processor.Unknown;
+
             }
         }
 
@@ -217,6 +229,7 @@ namespace Raspberry
                 case 0x5:
                 case 0x6:
                 case 0xd:
+
                 case 0xe:
                 case 0xf:
                     return Model.BRev2;
@@ -245,6 +258,12 @@ namespace Raspberry
 
                 case 0x2082:
                     return Model.B3;
+
+                case 0x20d3:
+                    return Model.B3Plus;
+
+                case 0x03111:
+                    return Model.Pi4;
 
                 default:
                     return Model.Unknown;
